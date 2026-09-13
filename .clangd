@@ -1,0 +1,32 @@
+# clangd config for pbrt-v4.
+#
+# pbrt_lib is compiled by nvcc with `-x cu`. pbrt's sources only parse under
+# nvcc's CUDA front-end (clang rejects e.g. `PBRT_CPU_GPU [[noreturn]]` in
+# log.h), so for clangd we drop CUDA entirely and parse everything as host C++:
+# with __CUDACC__ undefined, pbrt.h defines PBRT_CPU_GPU & friends as empty.
+CompileFlags:
+  Remove:
+    - -forward-unknown-to-host-compiler
+    - --forward-unknown-to-host-compiler
+    - --gpu-architecture=*
+    - -Xcudafe*
+    - --diag_suppress=*
+    - -Xnvlink
+    - -suppress-stack-size-warning
+    - --expt-relaxed-constexpr
+    - --extended-lambda
+    - -maxrregcount*
+    - --use_fast_math
+    - -lineinfo
+    - -Xcompiler
+    - -ccbin*
+    - -rdc=*
+    - -dc
+    - -ptx
+  Add:
+    # Overrides nvcc's `-x cu` (last -x wins); headers still get clangd's own
+    # `-x c++-header` treatment since we don't strip -x.
+    - -x
+    - c++
+    - -std=c++17
+    - -Wno-unknown-attributes

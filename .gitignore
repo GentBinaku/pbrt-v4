@@ -7,3 +7,4 @@ src/build
 *build*/
 .cache/
 compile_commands.json
+pbrt-v4-scenes

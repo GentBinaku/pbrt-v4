@@ -229,9 +229,6 @@ class CompactLightBounds {
 
 // LightBVHNode Definition
 struct alignas(32) LightBVHNode {
-    // LightBVHNode Public Methods
-    LightBVHNode() = default;
-
     PBRT_CPU_GPU
     static LightBVHNode MakeLeaf(unsigned int lightIndex, const CompactLightBounds &cb) {
         return LightBVHNode{cb, {lightIndex, 1}};
@@ -438,13 +435,14 @@ class ExhaustiveLightSampler {
     HashMap<Light, size_t> lightToBoundedIndex;
 };
 
-PBRT_CPU_GPU inline pstd::optional<SampledLight> LightSampler::Sample(const LightSampleContext &ctx,
-                                                         Float u) const {
+PBRT_CPU_GPU inline pstd::optional<SampledLight> LightSampler::Sample(
+    const LightSampleContext &ctx, Float u) const {
     auto s = [&](auto ptr) { return ptr->Sample(ctx, u); };
     return Dispatch(s);
 }
 
-PBRT_CPU_GPU inline Float LightSampler::PMF(const LightSampleContext &ctx, Light light) const {
+PBRT_CPU_GPU inline Float LightSampler::PMF(const LightSampleContext &ctx,
+                                            Light light) const {
     auto pdf = [&](auto ptr) { return ptr->PMF(ctx, light); };
     return Dispatch(pdf);
 }

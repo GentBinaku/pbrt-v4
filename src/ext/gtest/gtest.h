@@ -1,3 +1,5 @@
+#include <iostream>
+inline std::ostream& operator<<(std::ostream& os, char16_t c) { return os << (int)c; }
 // Copyright 2005, Google Inc.
 // All rights reserved.
 //

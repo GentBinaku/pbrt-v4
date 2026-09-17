@@ -62,7 +62,7 @@ std::string ToString(PixelFormat format) {
         return "Float";
     default:
         LOG_FATAL("Unhandled PixelFormat in FormatName()");
-        return "";
+        return {};
     }
 }
 
@@ -922,7 +922,8 @@ ImageAndMetadata Image::Read(std::string name, Allocator alloc, ColorEncoding en
 
 bool Image::Write(std::string name, const ImageMetadata &metadata) const {
     if (metadata.pixelBounds)
-        CHECK_EQ(metadata.pixelBounds->Area(), size_t(resolution.x) * size_t(resolution.y));
+        CHECK_EQ(metadata.pixelBounds->Area(),
+                 size_t(resolution.x) * size_t(resolution.y));
 
     if (HasExtension(name, "exr"))
         return WriteEXR(name, metadata);
@@ -1427,8 +1428,8 @@ std::string Image::ToString() const {
 }
 
 std::unique_ptr<uint8_t[]> Image::QuantizePixelsToU256(int *nOutOfGamut) const {
-    std::unique_ptr<uint8_t[]> u256 =
-        std::make_unique<uint8_t[]>(NChannels() * size_t(resolution.x) * size_t(resolution.y));
+    std::unique_ptr<uint8_t[]> u256 = std::make_unique<uint8_t[]>(
+        NChannels() * size_t(resolution.x) * size_t(resolution.y));
     for (int y = 0; y < resolution.y; ++y)
         for (int x = 0; x < resolution.x; ++x)
             for (int c = 0; c < NChannels(); ++c) {

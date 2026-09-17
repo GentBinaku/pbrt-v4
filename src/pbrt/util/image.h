@@ -85,7 +85,7 @@ inline std::string ToString(WrapMode mode) {
         return "octahedralsphere";
     default:
         LOG_FATAL("Unhandled wrap mode");
-        return nullptr;
+        return {};
     }
 }
 

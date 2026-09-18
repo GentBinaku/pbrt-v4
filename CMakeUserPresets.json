@@ -5,7 +5,7 @@
       "name": "gpu",
       "displayName": "Release + CUDA 12.9 + OptiX 9.1 (sm_120)",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build",
+      "binaryDir": "${sourceDir}/build-Release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
@@ -16,11 +16,42 @@
         "CUDA_TOOLKIT_ROOT_DIR": "/usr/local/cuda-12.9",
         "CUDAToolkit_ROOT": "/usr/local/cuda-12.9",
         "PBRT_OPTIX_PATH": "$env{HOME}/NVIDIA-OptiX-SDK-9.1.0-linux64-x86_64",
-        "PBRT_GPU_SHADER_MODEL": "sm_120"
+        "PBRT_GPU_SHADER_MODEL": "sm_120",
+        "OPENEXR_FORCE_INTERNAL_IMATH": "ON",
+        "CMAKE_DISABLE_FIND_PACKAGE_Imath": "ON"
+      }
+    },
+    {
+      "name": "gpu-debug",
+      "displayName": "RelWithDebInfo + CUDA 12.9 + OptiX 9.1 (sm_120)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/RelWithDebInfo",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_C_COMPILER": "gcc-14",
+        "CMAKE_CXX_COMPILER": "g++-14",
+        "CMAKE_CUDA_COMPILER": "/usr/local/cuda-12.9/bin/nvcc",
+        "CMAKE_CUDA_HOST_COMPILER": "g++-14",
+        "CUDA_TOOLKIT_ROOT_DIR": "/usr/local/cuda-12.9",
+        "CUDAToolkit_ROOT": "/usr/local/cuda-12.9",
+        "PBRT_OPTIX_PATH": "$env{HOME}/NVIDIA-OptiX-SDK-9.1.0-linux64-x86_64",
+        "PBRT_GPU_SHADER_MODEL": "sm_120",
+        "OPENEXR_FORCE_INTERNAL_IMATH": "ON",
+        "CMAKE_DISABLE_FIND_PACKAGE_Imath": "ON"
       }
     }
   ],
   "buildPresets": [
-    { "name": "gpu", "configurePreset": "gpu", "jobs": 24 }
+    {
+      "name": "gpu",
+      "configurePreset": "gpu",
+      "jobs": 24
+    },
+    {
+      "name": "gpu-debug",
+      "configurePreset": "gpu-debug",
+      "jobs": 24
+    }
   ]
 }

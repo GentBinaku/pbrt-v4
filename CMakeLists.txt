@@ -4,7 +4,7 @@ cmake_minimum_required (VERSION 3.12)
 
 project (PBRT-V4 LANGUAGES CXX C)
 
-set (CMAKE_CXX_STANDARD 23)
+set (CMAKE_CXX_STANDARD 20)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (NOT DEFINED PBRT_SOURCE_CODE)
@@ -95,7 +95,7 @@ if (PBRT_FLOAT_AS_DOUBLE)
   list (APPEND PBRT_DEFINITIONS "PBRT_FLOAT_AS_DOUBLE")
 endif ()
 if (PBRT_DBG_LOGGING)
-  list (APPEND PBRT_DEFINITIONS "PBRT_DBG_LOGGING")
+  # list (APPEND PBRT_DEFINITIONS "PBRT_DBG_LOGGING")
 endif ()
 
 #######################################
@@ -185,12 +185,6 @@ of CUDA installed, please update your PATH.")
   else ()
     find_package (CUDA REQUIRED)
 
-    # This seems to be necessary starting with 3.17.1, but gives an error
-    # about 17 being an unsupported version earlier...
-    if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.17.0")
-      set (CMAKE_CUDA_STANDARD 17)
-    endif ()
-
     # https://github.com/VIAME/VIAME/blob/aa6c5f56a898b08e4da102c400b453e23952199c/CMakeLists.txt#L291
     if (NOT CUDA_VERSION_PATCH)
       if (CUDA_NVCC_EXECUTABLE AND
@@ -246,7 +240,7 @@ of CUDA installed, please update your PATH.")
             cuda_build_configuration
             INTERFACE
                 "$<$<CXX_COMPILER_ID:MSVC>:$<$<COMPILE_LANGUAGE:CUDA>:--forward-slash-prefix-opts>>"
-                "$<$<COMPILE_LANGUAGE:CUDA>:--std=c++17;--use_fast_math;--expt-relaxed-constexpr;--extended-lambda;--forward-unknown-to-host-compiler>"
+                "$<$<COMPILE_LANGUAGE:CUDA>:--std=c++20;--use_fast_math;--expt-relaxed-constexpr;--extended-lambda;--forward-unknown-to-host-compiler>"
                 # The "$<NOT:$<BOOL:$<TARGET_PROPERTY:CUDA_PTX_COMPILATION>>>" part is to not add debugging symbols when generating PTX files for OptiX; see https://github.com/mmp/pbrt-v4/issues/69#issuecomment-715499748.
                 "$<$<COMPILE_LANGUAGE:CUDA>:$<IF:$<AND:$<CONFIG:Debug>,$<NOT:$<BOOL:$<TARGET_PROPERTY:CUDA_PTX_COMPILATION>>>>,-G;-g,-lineinfo;-maxrregcount;128>>"
         )
@@ -385,7 +379,7 @@ if (COMPILER_SUPPORTS_MARCH_NATIVE AND PBRT_BUILD_NATIVE_EXECUTABLE)
 endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-  list (APPEND PBRT_CXX_FLAGS "-std=c++17")
+  list (APPEND PBRT_CXX_FLAGS "-std=c++20")
 
   find_program (XIAR xiar)
   if (XIAR)
@@ -722,6 +716,7 @@ if (PBRT_CUDA_ENABLED)
     src/pbrt/gpu/optix/aggregate.cpp
     src/pbrt/gpu/optix/denoiser.cpp
     src/pbrt/gpu/optix/scaler.cpp
+    src/pbrt/gpu/device_memory.cpp
     src/pbrt/gpu/memory.cpp
     src/pbrt/gpu/util.cpp
   )
@@ -733,6 +728,7 @@ if (PBRT_CUDA_ENABLED)
     src/pbrt/gpu/memory.h
     src/pbrt/gpu/optix/optix.h
     src/pbrt/gpu/util.h
+    src/pbrt/gpu/device_memory.h
   )
 
   set_source_files_properties (

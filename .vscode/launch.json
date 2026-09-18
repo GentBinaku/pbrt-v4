@@ -1,0 +1,112 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "pbrt: render scene (CPU)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/RelWithDebInfo/pbrt",
+      "args": [
+        "--spp", "4",
+        "--outfile", "${workspaceFolder}/build/RelWithDebInfo/debug-out.exr",
+        "${workspaceFolder}/pbrt-v4-scenes/killeroos/killeroo-simple.pbrt"
+      ],
+      "cwd": "${workspaceFolder}/pbrt-v4-scenes/killeroos",
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "cmake: build pbrt",
+      "setupCommands": [
+        { "description": "Enable pretty-printing for gdb", "text": "-enable-pretty-printing", "ignoreFailures": true },
+        { "description": "Set disassembly flavor to Intel", "text": "-gdb-set disassembly-flavor intel", "ignoreFailures": true }
+      ]
+    },
+    {
+      "name": "pbrt: render scene (GPU, cuda-gdb)",
+      "type": "cuda-gdb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/RelWithDebInfo/pbrt",
+      "args": "--gpu --display-server localhost:14158 ${workspaceFolder}/pbrt-v4-scenes/ganesha/ganesha.pbrt",
+      "cwd": "${workspaceFolder}/pbrt-v4-scenes/ganesha",
+      "debuggerPath": "/usr/local/cuda-12.9/bin/cuda-gdb",
+    },
+    {
+      "name": "pbrt: pick scene file",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/RelWithDebInfo/pbrt",
+      "args": ["--spp", "4", "${input:sceneFile}"],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "cmake: build pbrt",
+      "setupCommands": [
+        { "description": "Enable pretty-printing for gdb", "text": "-enable-pretty-printing", "ignoreFailures": true }
+      ]
+    },
+    {
+      "name": "pbrt_test: unit tests",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/RelWithDebInfo/pbrt_test",
+      "args": ["--gtest_filter=${input:gtestFilter}"],
+      "cwd": "${workspaceFolder}/build/RelWithDebInfo",
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "cmake: build pbrt_test",
+      "setupCommands": [
+        { "description": "Enable pretty-printing for gdb", "text": "-enable-pretty-printing", "ignoreFailures": true }
+      ]
+    },
+    {
+      "name": "imgtool",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/RelWithDebInfo/imgtool",
+      "args": ["${input:imgtoolArgs}"],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "cmake: build imgtool",
+      "setupCommands": [
+        { "description": "Enable pretty-printing for gdb", "text": "-enable-pretty-printing", "ignoreFailures": true }
+      ]
+    },
+    {
+      "name": "pbrt: attach to running process",
+      "type": "cppdbg",
+      "request": "attach",
+      "program": "${workspaceFolder}/build/RelWithDebInfo/pbrt",
+      "processId": "${command:pickProcess}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "sceneFile",
+      "type": "promptString",
+      "description": "Path to a .pbrt scene file",
+      "default": "${workspaceFolder}/pbrt-v4-scenes/killeroos/killeroo-simple.pbrt"
+    },
+    {
+      "id": "gtestFilter",
+      "type": "promptString",
+      "description": "gtest filter (e.g. Sampling.* or * for all)",
+      "default": "*"
+    },
+    {
+      "id": "imgtoolArgs",
+      "type": "promptString",
+      "description": "imgtool arguments",
+      "default": "info ${workspaceFolder}/build/RelWithDebInfo/debug-out.exr"
+    }
+  ]
+}

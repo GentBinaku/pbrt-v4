@@ -813,11 +813,11 @@ class Normal3 : public Tuple3<Normal3, T> {
     PBRT_CPU_GPU
     Normal3(T x, T y, T z) : Tuple3<pbrt::Normal3, T>(x, y, z) {}
     template <typename U>
-    PBRT_CPU_GPU explicit Normal3<T>(Normal3<U> v)
+    PBRT_CPU_GPU explicit Normal3(Normal3<U> v)
         : Tuple3<pbrt::Normal3, T>(T(v.x), T(v.y), T(v.z)) {}
 
     template <typename U>
-    PBRT_CPU_GPU explicit Normal3<T>(Vector3<U> v)
+    PBRT_CPU_GPU explicit Normal3(Vector3<U> v)
         : Tuple3<pbrt::Normal3, T>(T(v.x), T(v.y), T(v.z)) {}
 };
 
@@ -826,6 +826,11 @@ using Normal3f = Normal3<Float>;
 // Quaternion Definition
 class Quaternion {
   public:
+    // Quaternion Public Methods
+    Quaternion() = default;
+    PBRT_CPU_GPU
+    Quaternion(Vector3f v, Float w) : v(v), w(w) {}
+
     PBRT_CPU_GPU
     Quaternion &operator+=(Quaternion q) {
         v += q.v;

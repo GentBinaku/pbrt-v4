@@ -57,16 +57,6 @@
 
 namespace pbrt {
 
-OptiXAggregate::BVH::BVH(size_t size) {
-    intersectHGRecords.resize(size);
-    shadowHGRecords.resize(size);
-    randomHitHGRecords.resize(size);
-}
-
-OptiXAggregate::BVH::BVH(BVH&&) = default;
-OptiXAggregate::BVH &OptiXAggregate::BVH::operator=(BVH&&) = default;
-OptiXAggregate::BVH::~BVH() = default;
-
 struct __align__(OPTIX_SBT_RECORD_ALIGNMENT) RaygenRecord {
     __align__(OPTIX_SBT_RECORD_ALIGNMENT) char header[OPTIX_SBT_RECORD_HEADER_SIZE];
 };
@@ -91,6 +81,17 @@ struct __align__(OPTIX_SBT_RECORD_ALIGNMENT) OptiXAggregate::HitgroupRecord {
         QuadricRecord quadricRec;
     };
 };
+
+// BVH's std::vector<HitgroupRecord> members need HitgroupRecord complete here.
+OptiXAggregate::BVH::BVH(size_t size) {
+    intersectHGRecords.resize(size);
+    shadowHGRecords.resize(size);
+    randomHitHGRecords.resize(size);
+}
+
+OptiXAggregate::BVH::BVH(BVH&&) = default;
+OptiXAggregate::BVH &OptiXAggregate::BVH::operator=(BVH&&) = default;
+OptiXAggregate::BVH::~BVH() = default;
 
 extern "C" {
 extern const unsigned char PBRT_EMBEDDED_PTX[];

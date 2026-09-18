@@ -1,0 +1,44 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "cmake: configure (gpu-debug preset)",
+      "type": "shell",
+      "command": "cmake --preset gpu-debug",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "cmake: build pbrt",
+      "type": "shell",
+      "command": "cmake --build --preset gpu-debug --target pbrt",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "cmake: build pbrt_test",
+      "type": "shell",
+      "command": "cmake --build --preset gpu-debug --target pbrt_test",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "cmake: build imgtool",
+      "type": "shell",
+      "command": "cmake --build --preset gpu-debug --target imgtool",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "cmake: build all",
+      "type": "shell",
+      "command": "cmake --build --preset gpu-debug",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    }
+  ]
+}
